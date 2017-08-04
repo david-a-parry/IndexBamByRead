@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use Test::More;# tests => 2;
 use FindBin qw($RealBin $Script);
-use lib "$RealBin../";
+use lib "$RealBin/../";
 BEGIN 
 { 
     use_ok("IndexBamByRead");
