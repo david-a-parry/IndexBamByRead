@@ -31,7 +31,7 @@ use strict;
 use warnings;
 use IO::Uncompress::Gunzip qw/ gunzip $GunzipError /;
 use IO::Compress::Gzip qw/ gzip $GzipError / ;
-use Fcntl 'SEEK_SET';
+use Fcntl ':seek';
 use File::Copy;
 use File::Temp qw/ tempfile /;
 use Data::Dumper;
@@ -362,9 +362,11 @@ sub _binsearch_reads{
 
 sub _get_reads_in_region{
     my ($bam, $start, $stop) = @_;
-    $bam->seek($start, SEEK_SET);
-    my $pos = $bam->tell();
+    $bam->header;
+    $bam->seek($start, SEEK_SET); #this is not working - bug in Bio::DB::Bam?
     my @reads = ();
+    push @reads, $bam->read1;
+    my $pos = $bam->tell();
     while ($pos < $stop){
         push @reads, $bam->read1;
         $pos = $bam->tell();
